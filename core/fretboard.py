@@ -1,9 +1,7 @@
+from chromatic import ChromaticScale
 
 class FretboardNotes:
-    chromatic_scale = [
-        'A', 'A#', 'B', 'C', 'C#', 
-        'D', 'D#', 'E', 'F', 'F#', 'G', 'G#'
-        ]
+    chromatic_scale = ChromaticScale.notes
     
     def __init__(
         self, 
