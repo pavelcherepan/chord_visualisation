@@ -47,9 +47,9 @@ class FretboardToCoord:
         1: (61, 78),
         2: (61, 100),
         3: (61, 122),
-        4: (61, 146),
-        5: (61, 169),
-        6: (61, 192)
+        4: (61, 150),
+        5: (61, 173),
+        6: (61, 195)
     }
     
     def get_fretboard_coords(self, string: int, fret: int) -> tuple[int, int]:
@@ -74,6 +74,7 @@ class ChordShapePlot:
         self._chord_string = chord_string
         self._converter = FretboardToCoord()
         self._shapes = ChordShapes()
+        self.diags = self.get_note_locations()
         
     def _create_base_image(self, no_subplots: int) -> list[Axes]:
         _, axs = plt.subplots(no_subplots, figsize=(20, 5  * no_subplots), dpi=600)
@@ -117,32 +118,35 @@ class ChordShapePlot:
         return diagrams
             
     def plot_all(self):
-        diags = self.get_note_locations()
-        axs = self._create_base_image(no_subplots=len(diags))
-        for idx, i in enumerate(diags):
-            self._display_open_strings(axs[idx], i.open_strings, fontsize=7 // len(diags))
+        axs = self._create_base_image(no_subplots=len(self.diags))
+        for idx, i in enumerate(self.diags):
+            self._display_open_strings(axs[idx], i.open_strings, fontsize=7 // len(self.diags))
             self._display_muted_strings(
-                axs[idx], i.muted_strings, fontsize=9 // len(diags)
+                axs[idx], i.muted_strings, fontsize=9 // len(self.diags)
             )
             for note in i.shape_coords:
-                axs[idx].scatter(note[0], note[1], color='orangered', s=0.05 / len(diags))
+                axs[idx].scatter(note[0], note[1], color='orangered', s=0.05 / len(self.diags))
         plt.axis('off')
         plt.show()
         
     def plot_by_idx(self, idx: int):
-        diags = self.get_note_locations()
         ax = self._create_base_image(no_subplots=1) 
-        chord_shape = diags[idx]
+        chord_shape = self.diags[idx]
         self._display_open_strings(ax, chord_shape.open_strings)
         self._display_muted_strings(ax, chord_shape.muted_strings)
         for note in chord_shape.shape_coords:
             ax.scatter(note[0], note[1], color='orangered', s=10)            
         plt.show()
         
+    def plot_one_by_one(self):
+        for i in range(len(self.diags)):
+            self.plot_by_idx(i)
+        
         
 
 if __name__ == '__main__':
     cp = ChordShapePlot('Dm')
-    cp.plot_by_idx(14)
+    # cp.plot_by_idx(14)
     # cp.plot_all()
+    cp.plot_one_by_one()
         

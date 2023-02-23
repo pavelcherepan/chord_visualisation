@@ -112,16 +112,20 @@ class ChordShapes:
         res: list[ChordDiagram] = []
         # for each of the shapes identify which strings are open
         for shape in raw_shapes:
-            played_strings: list[int] = [i[0] for i in shape]
-            print(f"\n {shape=}, {played_strings=}")
+            played_strings: list[int] = [i[0] for i in shape]            
             raw_open_strings: list[int] = [i for i in range(1, 7) 
                                            if i not in played_strings]
-            print(f"{raw_open_strings=}")
+            # if any of the notes are played on 0th fret
+            # remove those from played strings and add to
+            # open strings.
+            raw_open_strings.extend([i[0] for i in shape if i[1] == 0])
+            print(f"\n{raw_open_strings=}")
+            played_strings = [i[0] for i in shape if i[1] != 0]
+            print(f"{shape=}, {played_strings=}")
             # if the open string is lower register than the root note
             # then it will need to get muted
             muted_strings: list[int] = [i for i in raw_open_strings 
-                                        if i > max(played_strings)]  
-            print(f"{muted_strings=}")          
+                                        if i > max(played_strings)]          
             # go through tuning and if a note is not depressed and
             # it is still in the correct scale then add it to open_strings
             open_strings = [idx+1 for idx, i in enumerate(self.tuning) 
@@ -131,6 +135,7 @@ class ChordShapes:
             print(f"{open_strings=}")
             muted_strings = [i for i in raw_open_strings 
                              if i not in open_strings]
+            print(f"{muted_strings=}")  
             res.append(ChordDiagram(
                 shape=shape, 
                 open_strings=open_strings, 
