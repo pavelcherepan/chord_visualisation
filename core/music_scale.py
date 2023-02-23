@@ -1,7 +1,7 @@
 
 from enum import Enum
 
-from chromatic import ChromaticScale
+from core.chromatic import ChromaticScale
 
 
 class ScalePatterns(Enum):

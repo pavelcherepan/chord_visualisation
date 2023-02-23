@@ -1,4 +1,4 @@
-from chromatic import ChromaticScale
+from core.chromatic import ChromaticScale
 
 class FretboardNotes:
     chromatic_scale = ChromaticScale.notes
@@ -33,11 +33,21 @@ class FretboardNotes:
             if string_no == 0:
                 positions.extend([(6, f) for f in frets])
         return positions
+    
+    def get_root_note_string_from_chord_shape(self, shape: list[tuple[int, int]], root_note: str) -> int:
+        roots: list[int] = [
+            string
+            for string, fret in shape
+            if self.get_note(string, fret) == root_note
+        ]
+        roots.extend([idx+1 for idx, i in enumerate(self._tuning) if i==root_note])
+        return max(roots)
         
 
 if __name__ == "__main__":
     f = FretboardNotes()
-    print(f.get_fret_position_from_note('E'))
+    # print(f.get_fret_position_from_note('E'))
+    print(f.get_root_note_string_from_chord_shape([(1, 2), (2, 3), (3, 2)], 'D'))
     
         
     

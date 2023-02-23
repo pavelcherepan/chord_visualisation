@@ -1,6 +1,6 @@
 from enum import Enum
 
-from chromatic import ChromaticScale
+from core.chromatic import ChromaticScale
 
 
 class Intervals(Enum):
@@ -54,6 +54,5 @@ class Chords:
         
         
 if __name__ == '__main__':
-    print(ChordFormula.__getitem__('minor').value)
-    c = Chords('A', 'sus4')
+    c = Chords('D', 'minor')
     print(c.notes)

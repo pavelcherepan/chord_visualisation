@@ -1,9 +1,9 @@
 from dataclasses import dataclass
 from itertools import product
 
-from chords import Chords
-from fretboard import FretboardNotes
-from music_scale import MusicScale, ScalePatterns
+from core.chords import Chords
+from core.fretboard import FretboardNotes
+from core.music_scale import MusicScale, ScalePatterns
 
 
 @dataclass
@@ -56,7 +56,7 @@ class ChordShapes:
         c = Chords(key, quality)
         return c.notes
     
-    def get_chord_diagram(self, chord_string: str):
+    def get_chord_diagram(self, chord_string: str) -> list[ChordDiagram]:
         key, quality = self.parse_chord_string(chord_string)
         raw_shapes = self._get_shapes(key, quality)
         filtered_shapes = self._filter_shapes(raw_shapes)
@@ -110,8 +110,11 @@ class ChordShapes:
         print(f"{scale=}")
         
         res: list[ChordDiagram] = []
-        # for each of the shapes identify which strings are open
+        
         for shape in raw_shapes:
+            # get root note string
+            root_string = self.fretboard.get_root_note_string_from_chord_shape(shape, root)
+            
             played_strings: list[int] = [i[0] for i in shape]            
             raw_open_strings: list[int] = [i for i in range(1, 7) 
                                            if i not in played_strings]
@@ -125,7 +128,7 @@ class ChordShapes:
             # if the open string is lower register than the root note
             # then it will need to get muted
             muted_strings: list[int] = [i for i in raw_open_strings 
-                                        if i > max(played_strings)]          
+                                        if i > root_string]          
             # go through tuning and if a note is not depressed and
             # it is still in the correct scale then add it to open_strings
             open_strings = [idx+1 for idx, i in enumerate(self.tuning) 
@@ -135,7 +138,14 @@ class ChordShapes:
             print(f"{open_strings=}")
             muted_strings = [i for i in raw_open_strings 
                              if i not in open_strings]
-            print(f"{muted_strings=}")  
+            print(f"{muted_strings=}") 
+            
+            # now remove all the muted strings and open strings 
+            # from the original shape variable
+            shape = [i for i in shape 
+                     if i[0] not in open_strings 
+                     and i[0] not in muted_strings] 
+            
             res.append(ChordDiagram(
                 shape=shape, 
                 open_strings=open_strings, 
@@ -147,7 +157,7 @@ class ChordShapes:
 
 if __name__ == '__main__':
     c = ChordShapes()
-    c.get_chord_diagram('Dm')
+    c.get_chord_diagram('D')
 
             
         

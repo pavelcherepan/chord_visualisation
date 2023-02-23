@@ -1,11 +1,12 @@
 from dataclasses import dataclass
+
 import numpy as np
 from numpy.typing import NDArray
 import matplotlib.pyplot as plt
 from matplotlib.axes import Axes
 from sklearn.linear_model import LinearRegression
 
-from chord_shapes import ChordShapes
+from core.chord_shapes import ChordShapes
 
 
 class FretboardToCoord:
@@ -68,7 +69,7 @@ class CoordinateDiagram:
     
 
 class ChordShapePlot:
-    BASE_IMG = '/home/pav/Coding/python/chord_reverse/images/fretboard_2.png'
+    BASE_IMG = 'images/fretboard_2.png'
     
     def __init__(self, chord_string: str) -> None:
         self._chord_string = chord_string
@@ -146,7 +147,7 @@ class ChordShapePlot:
 
 if __name__ == '__main__':
     cp = ChordShapePlot('Dm')
-    # cp.plot_by_idx(14)
+    # cp.plot_by_idx(1)
     # cp.plot_all()
     cp.plot_one_by_one()
         

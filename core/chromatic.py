@@ -22,4 +22,4 @@ class ChromaticScale:
  
         
 if __name__ == '__main__':
-    print(ChromaticScale.notes)
+    print(ChromaticScale("E").scale)
