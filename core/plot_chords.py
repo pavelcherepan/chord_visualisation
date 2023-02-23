@@ -44,12 +44,12 @@ class FretboardToCoord:
     }
     
     open_coords: dict[int, tuple[int, int]] = {
-        1: (64, 76),
-        2: (64, 98),
-        3: (64, 122),
-        4: (64, 146),
-        5: (64, 169),
-        6: (64, 192)
+        1: (61, 78),
+        2: (61, 100),
+        3: (61, 122),
+        4: (61, 146),
+        5: (61, 169),
+        6: (61, 192)
     }
     
     def get_fretboard_coords(self, string: int, fret: int) -> tuple[int, int]:
@@ -76,27 +76,29 @@ class ChordShapePlot:
         self._shapes = ChordShapes()
         
     def _create_base_image(self, no_subplots: int) -> list[Axes]:
-        _, axs = plt.subplots(no_subplots, figsize=(20, 5))
+        _, axs = plt.subplots(no_subplots, figsize=(20, 5  * no_subplots), dpi=600)
         im: NDArray[np.int64] = plt.imread(self.BASE_IMG)
         if no_subplots == 1:
             axs.imshow(im)
+            axs.set_axis_off()
             return axs
         else:
             base: list[Axes] = []
             for a in axs:
                 a.imshow(im)
+                a.set_axis_off()
                 base.append(a)
             return base
     
-    def _display_open_strings(self, ax: Axes, strings: list[int]):
+    def _display_open_strings(self, ax: Axes, strings: list[int], fontsize: int = 5):
         coords = [FretboardToCoord.open_coords[i] for i in strings]
         for c in coords:
-            ax.text(x=c[0], y=c[1], s="O", color='orangered')
+            ax.text(x=c[0], y=c[1], s="O", color='orangered', fontsize=fontsize)
             
-    def _display_muted_strings(self, ax: Axes, strings: list[int]):
+    def _display_muted_strings(self, ax: Axes, strings: list[int], fontsize: int = 5):
         coords = [FretboardToCoord.open_coords[i] for i in strings]
         for c in coords:
-            ax.text(x=c[0], y=c[1], s="X", color='orangered')
+            ax.text(x=c[0], y=c[1], s="X", color='orangered', fontsize=fontsize)
         
     def get_note_locations(self) -> list[CoordinateDiagram]:
         diagrams: list[CoordinateDiagram] = []
@@ -114,14 +116,17 @@ class ChordShapePlot:
                 )
         return diagrams
             
-    def plot(self):
+    def plot_all(self):
         diags = self.get_note_locations()
-        axs = self._create_base_image(no_subplots=len(diags))           
+        axs = self._create_base_image(no_subplots=len(diags))
         for idx, i in enumerate(diags):
-            self._display_open_strings(axs[idx], i.open_strings)
-            self._display_muted_strings(axs[idx], i.muted_strings)
+            self._display_open_strings(axs[idx], i.open_strings, fontsize=7 // len(diags))
+            self._display_muted_strings(
+                axs[idx], i.muted_strings, fontsize=9 // len(diags)
+            )
             for note in i.shape_coords:
-                axs[idx].scatter(note[0], note[1])
+                axs[idx].scatter(note[0], note[1], color='orangered', s=0.05 / len(diags))
+        plt.axis('off')
         plt.show()
         
     def plot_by_idx(self, idx: int):
@@ -131,14 +136,13 @@ class ChordShapePlot:
         self._display_open_strings(ax, chord_shape.open_strings)
         self._display_muted_strings(ax, chord_shape.muted_strings)
         for note in chord_shape.shape_coords:
-            ax.scatter(note[0], note[1], color='orangered')            
+            ax.scatter(note[0], note[1], color='orangered', s=10)            
         plt.show()
         
         
 
 if __name__ == '__main__':
-    # c = ChordShapes()
-    cp = ChordShapePlot('F')
-    cp.plot_by_idx(-2)
-    # cp.create_base_image()
+    cp = ChordShapePlot('Dm')
+    cp.plot_by_idx(14)
+    # cp.plot_all()
         
