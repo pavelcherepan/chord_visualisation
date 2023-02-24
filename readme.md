@@ -2,6 +2,10 @@
 
 Use to create a diagram of all variations of a guitar chord from a given string.
 
+# Requirements
+- Python 3.9 or higher
+- External library dependencies: **scikit-learn**, **NumPy**, **matplotlib**
+
 # Usage
 
 Run `main` function in the `main.py` and provide a string of a chord to be displayed
