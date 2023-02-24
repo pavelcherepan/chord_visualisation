@@ -17,7 +17,7 @@ def main(
         plot (int | str): Value of how to display plot. 
             If an integer is provided then only the plot with that 
             integer index will be displayed. If 'all' then all 
-            variants will be shown on a large plot. If 'one-by-one'
+            variants will be shown on a large plot. If 'save-all'
             then the script will display plots one by one in the 
             order of the index.
     """
@@ -28,9 +28,9 @@ def main(
     elif plot == 'all':
         c.plot_all()
     else:
-        c.plot_one_by_one()
+        c.save_all_plots()
         
         
 if __name__ == '__main__':
-    main('Am', 'one-by-one')
+    main('Am', 'save-all')
     

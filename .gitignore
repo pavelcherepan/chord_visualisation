@@ -1,4 +1,5 @@
 venv/
+export/
 */__pycache__/
 images/fretboard.webp
 PythonImportHelper*
