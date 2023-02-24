@@ -1,3 +1,4 @@
+from pathlib import Path
 from dataclasses import dataclass
 
 import numpy as np
@@ -92,12 +93,12 @@ class ChordShapePlot:
                 base.append(a)
             return base
     
-    def _display_open_strings(self, ax: Axes, strings: list[int], fontsize: int = 5):
+    def _display_open_strings(self, ax: Axes, strings: list[int], fontsize: int = 15):
         coords = [FretboardToCoord.open_coords[i] for i in strings]
         for c in coords:
             ax.text(x=c[0], y=c[1], s="O", color='orangered', fontsize=fontsize)
             
-    def _display_muted_strings(self, ax: Axes, strings: list[int], fontsize: int = 5):
+    def _display_muted_strings(self, ax: Axes, strings: list[int], fontsize: int = 15):
         coords = [FretboardToCoord.open_coords[i] for i in strings]
         for c in coords:
             ax.text(x=c[0], y=c[1], s="X", color='orangered', fontsize=fontsize)
@@ -130,24 +131,37 @@ class ChordShapePlot:
         plt.axis('off')
         plt.show()
         
-    def plot_by_idx(self, idx: int):
-        ax = self._create_base_image(no_subplots=1) 
+    def plot_by_idx(self, idx: int, save: bool = False, save_path: Path | None = None):
+        ax = self._create_base_image(no_subplots=1)
         chord_shape = self.diags[idx]
         self._display_open_strings(ax, chord_shape.open_strings)
         self._display_muted_strings(ax, chord_shape.muted_strings)
         for note in chord_shape.shape_coords:
-            ax.scatter(note[0], note[1], color='orangered', s=10)            
-        plt.show()
+            ax.scatter(note[0], note[1], color='orangered', s=70)
+            ax.set_title(f"{self._chord_string} chord |  plot# [{idx}]")
+        if not save:           
+            plt.show()
+        if save and save_path:
+            plt.savefig(str(Path(save_path / f"{self._chord_string}_{idx}.png")))
+        plt.close()
         
-    def plot_one_by_one(self):
+    def save_all_plots(self, save_path: str | Path | None = None):
+        p = (
+            Path(save_path)
+            if save_path
+            else Path().resolve() / "export" / f"{self._chord_string}"
+        )
+        if not p.is_dir():
+            p.mkdir(parents=True, exist_ok=True)
         for i in range(len(self.diags)):
-            self.plot_by_idx(i)
+            self.plot_by_idx(idx=i, save=True, save_path=p)
+        
         
         
 
 if __name__ == '__main__':
     cp = ChordShapePlot('Dm')
-    # cp.plot_by_idx(1)
+    cp.plot_by_idx(1)
     # cp.plot_all()
-    cp.plot_one_by_one()
+    # cp.plot_one_by_one()
         
