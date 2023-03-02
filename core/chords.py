@@ -26,19 +26,25 @@ class Intervals(Enum):
     
 
 class ChordFormula(Enum):
-    major = Intervals.P1.value, Intervals.M3.value, Intervals.P5.value
-    minor = Intervals.P1.value, Intervals.m3.value, Intervals.P5.value
-    aug = Intervals.P1.value, Intervals.m3.value, Intervals.A5.value
-    dim = Intervals.P1.value, Intervals.m3.value, Intervals.d5.value
-    sus4 = Intervals.P1.value, Intervals.P4.value, Intervals.P5.value
-    sus2 = Intervals.P1.value, Intervals.M2.value, Intervals.P5.value
-    major7 = Intervals.P1.value, Intervals.M3.value, Intervals.P5.value, Intervals.M7.value
-    dom7 = Intervals.P1.value, Intervals.M3.value, Intervals.P5.value, Intervals.m7.value
-    minor7 = Intervals.P1.value, Intervals.m3.value, Intervals.P5.value, Intervals.m7.value
-    minor7_flat5 = Intervals.P1.value, Intervals.m3.value, Intervals.d5.value, Intervals.m7.value
-    dim7 = Intervals.P1.value, Intervals.m3.value, Intervals.d5.value, Intervals.d7.value
-    major9 = Intervals.P1.value, Intervals.M3.value, Intervals.P5.value, Intervals.M7.value, Intervals.M9.value
-    dom9 = Intervals.P1.value, Intervals.M3.value, Intervals.P5.value, Intervals.m7.value, Intervals.M9.value
+    major = Intervals.P1, Intervals.M3, Intervals.P5
+    minor = Intervals.P1, Intervals.m3, Intervals.P5
+    aug = Intervals.P1, Intervals.m3, Intervals.A5
+    dim = Intervals.P1, Intervals.m3, Intervals.d5
+    sus4 = Intervals.P1, Intervals.P4, Intervals.P5
+    sus2 = Intervals.P1, Intervals.M2, Intervals.P5
+    major7 = Intervals.P1, Intervals.M3, Intervals.P5, Intervals.M7
+    dom7 = Intervals.P1, Intervals.M3, Intervals.P5, Intervals.m7
+    minor7 = Intervals.P1, Intervals.m3, Intervals.P5, Intervals.m7
+    minor7_flat5 = Intervals.P1, Intervals.m3, Intervals.d5, Intervals.m7
+    dim7 = Intervals.P1, Intervals.m3, Intervals.d5, Intervals.d7
+    major9 = Intervals.P1, Intervals.M3, Intervals.P5, Intervals.M7, Intervals.M9
+    dom9 = Intervals.P1, Intervals.M3, Intervals.P5, Intervals.m7, Intervals.M9
+    
+    @classmethod
+    def get_quality_from_intervals(cls, intervals: tuple[Intervals, ...]) -> str | None:
+        """Get a chord quality by providing a tuple of musical intervals"""
+        lookup = dict(zip([v.value for v in cls._member_map_.values()], cls._member_map_.keys()))
+        return lookup.get(intervals)
     
 
 class Chords:    
@@ -50,10 +56,13 @@ class Chords:
     
     @property
     def notes(self):
-        ranges = ChordFormula.__getitem__(self.quality).value        
+        print(ChordFormula.__getitem__(self.quality))
+        ranges: tuple[int, ...] = tuple(i.value for i in ChordFormula.__getitem__(self.quality).value)
         return [k for k, v in self.scale.items() if v in ranges]
         
         
 if __name__ == '__main__':
     c = Chords('D', 'minor')
     print(c.notes)
+    
+    print(ChordFormula.get_quality_from_intervals((Intervals.P1, Intervals.m3, Intervals.P5)))
