@@ -29,6 +29,7 @@ def plot_chord_shapes(
     elif plot == 'all':
         c.plot_all()
     else:
+
         c.save_all_plots()  
         
 
@@ -54,8 +55,7 @@ def find_chord_name_from_diagram(finger_positions: list[tuple[int, int]],
     quality = cng.indentify_chord_quality(cd)
     return(f"{cng.root_note_name} {quality}")    
 
-        
-        
+               
 if __name__ == '__main__':
     # plot_chord_shapes('Am', 'one-by-one')
     

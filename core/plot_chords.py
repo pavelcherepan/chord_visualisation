@@ -93,12 +93,12 @@ class ChordShapePlot:
                 base.append(a)
             return base
     
-    def _display_open_strings(self, ax: Axes, strings: list[int], fontsize: int = 5):
+    def _display_open_strings(self, ax: Axes, strings: list[int], fontsize: int = 15):
         coords = [FretboardToCoord.open_coords[i] for i in strings]
         for c in coords:
             ax.text(x=c[0], y=c[1], s="O", color='orangered', fontsize=fontsize)
             
-    def _display_muted_strings(self, ax: Axes, strings: list[int], fontsize: int = 5):
+    def _display_muted_strings(self, ax: Axes, strings: list[int], fontsize: int = 15):
         coords = [FretboardToCoord.open_coords[i] for i in strings]
         for c in coords:
             ax.text(x=c[0], y=c[1], s="X", color='orangered', fontsize=fontsize)
@@ -160,6 +160,6 @@ class ChordShapePlot:
 
 if __name__ == '__main__':
     cp = ChordShapePlot('Dm')
-    # cp.plot_by_idx(1)
+    cp.plot_by_idx(1)
     # cp.plot_all()
         

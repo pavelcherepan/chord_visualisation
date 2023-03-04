@@ -6,6 +6,12 @@ Use to create a diagram of all variations of a guitar chord from a given string.
 - Python 3.9 or higher
 - External library dependencies: **scikit-learn**, **NumPy**, **matplotlib**
 
+# Installation
+Clone or download the code repository. To install the dependencies run:
+```
+python -m pip install matplotlib scikit-learn numpy
+```
+
 # Usage
 The `main.py` provides two convenience functions:
 
