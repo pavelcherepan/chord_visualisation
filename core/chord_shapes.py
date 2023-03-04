@@ -7,8 +7,14 @@ from core.music_scale import MusicScale, ScalePatterns
 
 
 @dataclass
+class FingerPosition:
+    string: int
+    fret: int
+
+
+@dataclass
 class ChordDiagram:
-    shape: list[tuple[int, int]]
+    shape: list[FingerPosition]
     open_strings: list[int]
     muted_strings: list[int]
 
@@ -146,8 +152,11 @@ class ChordShapes:
                      if i[0] not in open_strings 
                      and i[0] not in muted_strings] 
             
+            # Create FingerPosition objects
+            pos = [FingerPosition(i[0], i[1]) for i in shape]
+            
             res.append(ChordDiagram(
-                shape=shape, 
+                shape=pos, 
                 open_strings=open_strings, 
                 muted_strings=muted_strings
                 )

@@ -157,11 +157,9 @@ class ChordShapePlot:
             self.plot_by_idx(idx=i, save=True, save_path=p)
         
         
-        
 
 if __name__ == '__main__':
     cp = ChordShapePlot('Dm')
     cp.plot_by_idx(1)
     # cp.plot_all()
-    # cp.plot_one_by_one()
         

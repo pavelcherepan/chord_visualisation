@@ -23,7 +23,7 @@ class Intervals(Enum):
     P8 = 12  # octave
     M9 = 14 # Major ninth
     
-    
+      
 
 class ChordFormula(Enum):
     major = Intervals.P1, Intervals.M3, Intervals.P5
@@ -62,7 +62,12 @@ class Chords:
         
         
 if __name__ == '__main__':
-    c = Chords('D', 'minor')
+    c = Chords('D', 'major')
     print(c.notes)
     
-    print(ChordFormula.get_quality_from_intervals((Intervals.P1, Intervals.m3, Intervals.P5)))
+    foo = (Intervals.P1.value, Intervals.M3.value, Intervals.P5.value)
+    for f in ChordFormula._member_map_.items():
+        print(f[1].value)
+        if f[1]._value_ == foo:
+            print(f[0])
+            break
