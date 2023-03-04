@@ -2,7 +2,7 @@ from core.plot_chords import ChordShapePlot
 
 
 
-def main(
+def plot_chord_shapes(
     chord_string: str,
     plot: int | str = 1):
     """Generate a plot of chord diagram.
@@ -30,7 +30,9 @@ def main(
     else:
         c.plot_one_by_one()
         
+
+        
         
 if __name__ == '__main__':
-    main('Am', 'one-by-one')
+    plot_chord_shapes('Am', 'one-by-one')
     
