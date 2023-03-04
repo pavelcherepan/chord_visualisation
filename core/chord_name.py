@@ -59,7 +59,6 @@ class ChordNameGenerator:
         notes = self._get_all_other_notes(diag_with_open_strings)
         dist = self._calculate_distances(scale, notes)
         intervals = self._create_intervals(self.root_note_name, notes, dist)
-        print(intervals)
         return self._get_chord_quality_from_formula(intervals)
     
     def _add_open_strings_to_diagram(self, diagram: ChordDiagram) -> ChordDiagram:
@@ -103,7 +102,6 @@ class ChordNameGenerator:
         # intervals. Now we go through and create all possible combinations
         # of our list elements and check them against the known formulas.
         comb: list[tuple[Intervals]] = list(itertools.product(*intervals.values()))
-        print(f"{comb=}")
         
         # sort the resulting list according to the interval value
         comb_sorted: list[list[Intervals]] = [sorted(i, key=lambda x: x.value) for i in comb]
