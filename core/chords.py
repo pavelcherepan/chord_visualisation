@@ -1,10 +1,11 @@
 from enum import Enum
 
-from core.chromatic import ChromaticScale
+from core.notes import ChromaticNotes
 
 
 class Intervals(Enum):
     """Standard intervals in western music in number of half-steps"""
+
     P1 = 0  # perfect unison
     m2 = 1  # minor second
     M2 = 2  # major second
@@ -21,9 +22,8 @@ class Intervals(Enum):
     m7 = 10  # minor seventh
     M7 = 11  # major seventh
     P8 = 12  # octave
-    M9 = 14 # Major ninth
-    
-      
+    M9 = 14  # Major ninth
+
 
 class ChordFormula(Enum):
     major = Intervals.P1, Intervals.M3, Intervals.P5
@@ -39,32 +39,31 @@ class ChordFormula(Enum):
     dim7 = Intervals.P1, Intervals.m3, Intervals.d5, Intervals.d7
     major9 = Intervals.P1, Intervals.M3, Intervals.P5, Intervals.M7, Intervals.M9
     dom9 = Intervals.P1, Intervals.M3, Intervals.P5, Intervals.m7, Intervals.M9
-    
+
     @classmethod
     def get_quality_from_intervals(cls, intervals: tuple[Intervals, ...]) -> str | None:
         """Get a chord quality by providing a tuple of musical intervals"""
         lookup = dict(zip([v.value for v in cls._member_map_.values()], cls._member_map_.keys()))
         return lookup.get(intervals)
-    
 
-class Chords:    
+
+class Chords:
     def __init__(self, key: str, quality: str) -> None:
         self.key = key
         self.quality = quality
-        s = ChromaticScale(key)
-        self.scale: dict[str, int] = s.scale
-    
+        self.scale: dict[str, int] = ChromaticNotes.get_full_octave_of_notes_and_distance_from_starting_note(self.key)
+
     @property
     def notes(self):
         print(ChordFormula.__getitem__(self.quality))
         ranges: tuple[int, ...] = tuple(i.value for i in ChordFormula.__getitem__(self.quality).value)
         return [k for k, v in self.scale.items() if v in ranges]
-        
-        
-if __name__ == '__main__':
-    c = Chords('D', 'major')
+
+
+if __name__ == "__main__":
+    c = Chords("D", "major")
     print(c.notes)
-    
+
     foo = (Intervals.P1.value, Intervals.M3.value, Intervals.P5.value)
     for f in ChordFormula._member_map_.items():
         print(f[1].value)
