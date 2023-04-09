@@ -2,7 +2,7 @@ from core.notes import ChromaticNotes
 
 
 class FretboardNotes:
-    chromatic_scale = ChromaticNotes.get_full_octave_from_starting_note("A")
+    chromatic_scale = ChromaticNotes.get_standard_notations_for_full_octave_from_starting_note("A")
 
     def __init__(self, tuning: tuple[str, ...] = ("E", "B", "G", "D", "A", "E"), max_frets: int = 13) -> None:
         self._tuning = tuning
@@ -40,5 +40,6 @@ class FretboardNotes:
 
 if __name__ == "__main__":
     f = FretboardNotes()
-    # print(f.get_fret_position_from_note('E'))
+    # print(f.get_fret_position_from_note("E"))
     print(f.get_root_note_string_from_chord_shape([(1, 2), (2, 3), (3, 2)], "D"))
+    # print(f.get_note(3, 3))

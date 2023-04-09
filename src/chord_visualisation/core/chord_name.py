@@ -72,7 +72,10 @@ class ChordNameGenerator:
 
     def _calculate_distances(self, notes: list[str]) -> list[int]:
         return [
-            ChromaticNotes.get_full_octave_of_notes_and_distance_from_starting_note(starting_note=i)[i] for i in notes
+            ChromaticNotes.get_full_octave_of_notes_and_distance_from_starting_note(starting_note=self.root_note_name)[
+                i
+            ]
+            for i in notes
         ]
 
     def _create_intervals(self, root_note: str, notes: list[str], distances: list[int]):
@@ -104,7 +107,7 @@ class ChordNameGenerator:
         # now go through all the chord formulas and see if any of them match
         for c in comb_sorted:
             for f in ChordFormula._member_map_.items():
-                if f[1]._value_ == tuple(i.value for i in c):
+                if f[1]._value_ == tuple(c):
                     return f[0]
 
 

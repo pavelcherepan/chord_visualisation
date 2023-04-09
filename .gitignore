@@ -1,6 +1,6 @@
 .venv/
 export/
-*/__pycache__/
+*__pycache__/
 images/fretboard.webp
 PythonImportHelper*
 test.png

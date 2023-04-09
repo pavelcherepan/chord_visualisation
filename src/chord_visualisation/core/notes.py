@@ -4,6 +4,17 @@ import enum
 
 @define
 class MusicalNote:
+    """
+    Musical note class.
+
+    Args:
+        standard_notation (str): Standard notation of the musical note.
+        alternative_notation (str): Alternative notation of the musical note.
+        base_frequency (float): The base frequency of the musical note.
+        octave (int, optional): Octave for the musical note. Defaults to None.
+
+    """
+
     standard_notation: str
     alternative_notation: str
     base_frequency: float
@@ -11,6 +22,8 @@ class MusicalNote:
 
 
 class ChromaticNotes(enum.Enum):
+    """ChromaticNotes enum."""
+
     A = MusicalNote("A", "A", 27.5, None)
     A_sharp = MusicalNote("A#", "Bb", 29.14, None)
     B = MusicalNote("B", "B", 30.87, None)
@@ -26,7 +39,7 @@ class ChromaticNotes(enum.Enum):
 
     @classmethod
     def get_note_by_standard_notation(cls, standard_notation: str) -> MusicalNote:
-        return cls.__getitem__(standard_notation).value
+        return [i.value for i in cls.__members__.values() if i.value.standard_notation == standard_notation][0]
 
     @classmethod
     def get_note_by_alternative_notation(cls, alternative_notation: str) -> MusicalNote:
@@ -36,18 +49,25 @@ class ChromaticNotes(enum.Enum):
 
     @classmethod
     def get_full_octave_from_starting_note(cls, starting_note: str) -> list[MusicalNote]:
-        n = cls.get_note_by_standard_notation(starting_note)
-        starting_note_index = list(cls).index(cls.__getitem__(n.standard_notation))
+        for idx, i in enumerate(cls.__members__.values()):
+            if i.value.standard_notation == starting_note:
+                starting_note_index = idx
+                break
+        else:
+            raise ValueError("starting note not in list")
         return list(cls)[starting_note_index:] + list(cls)[:starting_note_index]
 
     @classmethod
     def get_full_octave_of_notes_and_distance_from_starting_note(cls, starting_note: str) -> dict[str, int]:
-        n = cls.get_note_by_standard_notation(starting_note)
         return {
             note.value.standard_notation: distance
-            for distance, note in enumerate(cls.get_full_octave_from_starting_note(n))
+            for distance, note in enumerate(cls.get_full_octave_from_starting_note(starting_note))
         }
+
+    @classmethod
+    def get_standard_notations_for_full_octave_from_starting_note(cls, starting_note: str) -> list[str]:
+        return [i.value.standard_notation for i in cls.get_full_octave_from_starting_note(starting_note)]
 
 
 if __name__ == "__main__":
-    print(ChromaticNotes.get_full_octave_of_notes_and_distance_from_starting_note(ChromaticNotes.E.value))
+    print(ChromaticNotes.get_full_octave_of_notes_and_distance_from_starting_note("A#"))
