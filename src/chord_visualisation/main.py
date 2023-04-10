@@ -3,15 +3,17 @@ from core.chord_shapes import ChordDiagram, FingerPosition
 from core.chord_name import ChordNameGenerator
 
 
-def plot_chord_shapes(chord_string: str, plot: int | str = 1):
+def plot_chord_shapes(chord_root_note: str, chord_quality: str, plot: int | str = 1):
     """Generate a plot of chord diagram.
 
     Usage: Provide a string of chord name and the value for
     plot parameter that determines how plots will be displayed.
     The plot argument accepts either an integer or one of
     strings ['all', 'one-by-one'].
+
     Args:
-        chord_string (str): A string of chord name
+        chord_root_note (str): A string of the root note of the chord.
+        chord_quality (str): A string of the quality of the chord.
         plot (int | str): Value of how to display plot.
             If an integer is provided then only the plot with that
             integer index will be displayed. If 'all' then all
@@ -19,7 +21,7 @@ def plot_chord_shapes(chord_string: str, plot: int | str = 1):
             then the script will display plots one by one in the
             order of the index.
     """
-    c = ChordShapePlot(chord_string)
+    c = ChordShapePlot(chord_root_note, chord_quality)
 
     if isinstance(plot, int):
         c.plot_by_idx(plot)
@@ -58,7 +60,6 @@ if __name__ == "__main__":
     open_strings = [2, 3, 4]
     muted_strings = []
 
-    # res = find_chord_name_from_diagram(
-    #     finger_positions=shape_3, open_strings=open_strings, muted_strings=muted_strings)
+    # res = find_chord_name_from_diagram(finger_positions=shape_3, open_strings=open_strings, muted_strings=muted_strings)
     # print(res)
-    plot_chord_shapes("A", "save-all")
+    plot_chord_shapes("A", "major", "save-all")
