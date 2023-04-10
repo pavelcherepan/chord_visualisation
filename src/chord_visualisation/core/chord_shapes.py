@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from itertools import product
 
 from core.chords import Chords
+from core.notes import ChromaticNotes
 from core.fretboard import FretboardNotes
 from core.music_scale import MusicScale, ScalePatterns
 
@@ -19,9 +20,6 @@ class ChordDiagram:
     muted_strings: list[int]
 
 
-note_translator = {"B♭": "A#", "D♭": "C#", "E♭": "D#", "G♭": "F#", "A♭": "G#", "C♭": "C", "F♭": "F"}
-
-
 class ChordShapes:
     def __init__(
         self,
@@ -30,39 +28,21 @@ class ChordShapes:
         self.tuning = tuning
         self.fretboard = FretboardNotes(tuning)
 
-    def parse_chord_string(self, chord_string: str) -> tuple[str, str]:
-        if len(chord_string) == 1:
-            return chord_string, "major"
-        if chord_string[1] in ["#", "♭", "b"]:
-            root_note = chord_string[:2]
-            raw_quality = chord_string[2:]
-        else:
-            root_note = chord_string[0]
-            raw_quality = chord_string[1:]
-        quality = self._parse_quality_string(raw_quality)
-        return root_note, quality
-
-    def _parse_quality_string(self, raw_quality: str) -> str:
-        if raw_quality == "m":
-            return "minor"
-        elif raw_quality == "m7":
-            return "minor7"
-        else:
-            return raw_quality
-
     def get_chord_notes(self, key: str, quality: str) -> list[str]:
         c = Chords(key, quality)
         return c.notes
 
-    def get_chord_diagram(self, chord_string: str) -> list[ChordDiagram]:
-        key, quality = self.parse_chord_string(chord_string)
-        raw_shapes = self._get_shapes(key, quality)
+    def get_chord_diagram(self, root_note: str, quality: str) -> list[ChordDiagram]:
+        raw_shapes = self._get_shapes(root_note, quality)
         filtered_shapes = self._filter_shapes(raw_shapes)
-        return self._check_open_strings(filtered_shapes, key, quality)
+        return self._check_open_strings(filtered_shapes, root_note, quality)
 
     def _get_shapes(self, root: str, quality: str) -> list[tuple[tuple[int, int], ...]]:
         # get chord notes translate flats to alternative names
-        notes = [note_translator.get(n) or n for n in self.get_chord_notes(root, quality)]
+        notes = [
+            ChromaticNotes.get_standard_notation_from_alternative_notation(n) or n
+            for n in self.get_chord_notes(root, quality)
+        ]
         chord_notes: dict[int, list[tuple[int, int]]] = {
             idx: self.fretboard.get_fret_position_from_note(n) for idx, n in enumerate(notes)
         }

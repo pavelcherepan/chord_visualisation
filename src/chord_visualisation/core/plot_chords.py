@@ -67,8 +67,9 @@ class CoordinateDiagram:
 class ChordShapePlot:
     BASE_IMG = "images/fretboard_2.png"
 
-    def __init__(self, chord_string: str) -> None:
-        self._chord_string = chord_string
+    def __init__(self, chord_root_note: str, chord_quality: str) -> None:
+        self._root_note = chord_root_note
+        self._quality = chord_quality
         self._converter = FretboardToCoord()
         self._shapes = ChordShapes()
         self.diags = self.get_note_locations()
@@ -100,7 +101,7 @@ class ChordShapePlot:
 
     def get_note_locations(self) -> list[CoordinateDiagram]:
         diagrams: list[CoordinateDiagram] = []
-        for diagram in self._shapes.get_chord_diagram(self._chord_string):
+        for diagram in self._shapes.get_chord_diagram(self._root_note, self._quality):
             full_shape = []
             for note in diagram.shape:
                 x, y = self._converter.get_fretboard_coords(note.string, note.fret)
@@ -129,15 +130,15 @@ class ChordShapePlot:
         self._display_muted_strings(ax, chord_shape.muted_strings)
         for note in chord_shape.shape_coords:
             ax.scatter(note[0], note[1], color="orangered", s=70)
-            ax.set_title(f"{self._chord_string} chord |  plot# [{idx}]")
+            ax.set_title(f"{self._root_note}{self._quality} chord |  plot# [{idx}]")
         if not save:
             plt.show()
         if save and save_path:
-            plt.savefig(str(Path(save_path / f"{self._chord_string}_{idx}.png")))
+            plt.savefig(str(Path(save_path / f"{self._root_note}{self._quality}_{idx}.png")))
         plt.close()
 
     def save_all_plots(self, save_path: str | Path | None = None):
-        p = Path(save_path) if save_path else Path().resolve() / "export" / f"{self._chord_string}"
+        p = Path(save_path) if save_path else Path().resolve() / "export" / f"{self._root_note}{self._quality}"
         if not p.is_dir():
             p.mkdir(parents=True, exist_ok=True)
         for i in range(len(self.diags)):
