@@ -60,6 +60,8 @@ if __name__ == "__main__":
     open_strings = [2, 3, 4]
     muted_strings = []
 
-    # res = find_chord_name_from_diagram(finger_positions=shape_3, open_strings=open_strings, muted_strings=muted_strings)
+    # res = find_chord_name_from_diagram(
+    # finger_positions=shape_3, open_strings=open_strings, muted_strings=muted_strings
+    # )
     # print(res)
     plot_chord_shapes("A", "major", "save-all")

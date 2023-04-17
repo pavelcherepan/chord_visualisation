@@ -59,14 +59,41 @@ class ChordNameGenerator:
         return self._get_chord_quality_from_formula(intervals)
 
     def _add_open_strings_to_diagram(self, diagram: ChordDiagram) -> ChordDiagram:
+        """Add open strings to the diagram shape, i.e. when a string is
+        meant to be fretted on 0th fret, we add it to the shape.
+
+        Args:
+            diagram (ChordDiagram): A ChordDiagram object with open strings added
+
+        Returns:
+            ChordDiagram: _description_
+        """
         open_strings = [FingerPosition(i, 0) for i in diagram.open_strings]
         diagram.shape += open_strings
         return diagram
 
-    def _create_chromatic_scale(self, root_note: str):
+    def _create_chromatic_scale(self, root_note: str) -> dict[str, int]:
+        """Get a dictionary of note standard notations and their distances
+        from the root note.
+
+        Args:
+            root_note (str): Root note of the scale.
+
+        Returns:
+            (dict[str, int]): Dictionary of note standard notations and their distances
+                from the root note
+        """
         return ChromaticNotes.get_full_octave_of_notes_and_distance_from_starting_note(root_note)
 
-    def _get_all_other_notes(self, diagram: ChordDiagram):
+    def _get_all_other_notes(self, diagram: ChordDiagram) -> list[str]:
+        """Get all other notes in the chord.
+
+        Args:
+            diagram (ChordDiagram): ChordDiagram object.
+
+        Returns:
+            (list[str]): List of note names in the chord.
+        """
         # get names of all other notes in the chord
         return [self.fretboard.get_note(pos.string, pos.fret) for pos in diagram.shape]
 
@@ -91,6 +118,14 @@ class ChordNameGenerator:
         return intervals_dict
 
     def _get_chord_quality_from_formula(self, intervals: dict[str, list[enum.Enum]]) -> str | None:
+        """Get chord quality from the intervals.
+
+        Args:
+            intervals (dict[str, list[enum.Enum]]): Dictionary of notes and their intervals.
+
+        Returns:
+            str | None: Chord quality or None if no match is found.
+        """
         # because some intervals can have same semitone ranges and it's important
         # to keep those ranges because they might result in different chords,
         # out intervals dict will have for each of the notes a list of up to

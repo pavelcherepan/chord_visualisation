@@ -22,6 +22,7 @@ pyqt5 = ">=5.15.2"
 ruff = "^0.0.261"
 pylint = "^2.17.2"
 black = "^23.3.0"
+pydub = "^0.25.0"
 
 [build-system]
 requires = ["poetry-core"]
